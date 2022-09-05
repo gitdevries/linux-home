@@ -93,3 +93,6 @@ fi
 
 # Custom Line
 PS1='\[\e[0;32m\]@\[\e[0;32m\]\u \[\e[0;1;37m\]➞ \[\e[0;38;5;38m\]\w \[\e[0;36m\](\[\e[0;1;38;5;167m\]$(git branch 2>/dev/null | grep '"'"'^*'"'"' | colrm 1 2) \[\e[0;1m\]/ \[\e[0;37m\]$(ip route get 1.1.1.1 | awk -F"src " '"'"'NR==1{split($2,a," ");print a[1]}'"'"')\[\e[0;36m\]) \[\e[0;37m\]$ \[\e[0m\]'
+
+# Make sure you only have to write pair pass once a session
+eval ``keychain --eval --agents ssh id_rsa
