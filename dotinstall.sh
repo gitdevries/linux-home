@@ -24,6 +24,9 @@ sudo apt install nodejs -y
 # Install PHP8.1
 sudo apt install php8.1 php8.1-curl php8.1-common php8.1-gd php8.1-xml php8.1-soap php8.1-mbstring php8.1-mysql php8.1-zip php8.1-gmp php8.1-redis php8.1-bcmath php8.1-imap -y
 
+# Install Helpers
+sudo apt install keychain -y
+
 # Extras
 mkdir ~/.config/nvim -p
 sudo npm i -g pm2
