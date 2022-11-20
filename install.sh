@@ -19,6 +19,10 @@ checkPackage() {
     return 1
 }
 
+checkFlatpak() {
+    echo "${red}TODO: Implement${r}"
+}
+
 askConfirm() {
     read -p "$(echo -e $1) " answer
     case ${answer:0:1} in
@@ -34,7 +38,8 @@ askConfirm() {
 # Install core
 echo -e "${blue}[~]${yellow} Installing core requirements${r}"
 sudo apt-get install -yqq software-properties-common ca-certificates lsb-release apt-transport-https curl
-sudo apt-get update -y
+sudo apt-get update -yqq
+echo -e "${green}[!]${purple} > Updated${r}"
 
 # Download external dependencies
 echo -e "${blue}[~]${grey} Installing: neovim plug${r}"
@@ -46,7 +51,8 @@ checkPackage "neovim"
 if [ $? = 1 ]; then
     echo -e "${green}[!]${cyan} > Already installed${r}"
 else
-    sudo apt install neovim -y
+    sudo apt install -yqq neovim
+    echo -e "${green}[!]${purple} > Installed${r}"
 fi
 
 echo -e "${blue}[~]${grey} Installing: keychain${r}"
@@ -54,26 +60,29 @@ checkPackage "keychain"
 if [ $? = 1 ]; then
     echo -e "${green}[!]${cyan} > Already installed${r}"
 else
-    sudo apt install keychain -y
+    sudo apt install -yqq keychain
+    echo -e "${green}[!]${purple} > Installed${r}"
 fi
 
 # Extras
+echo -e "${blue}[~]${grey} Configurating utilities${r}"
 mkdir ~/.config/nvim -p
+cp ./linux_config/nvim/init.vim ~/.config/nvim/
 
 # Install Extra Setup
-askConfirm "${red}[?]${yellow} Would you like to install extras? (Y/n)${reset}"
+askConfirm "${red}[?]${yellow} Would you like to install extras? (Y/n)${r}"
 if [ $? = 1 ]; then
-    echo "a"
+    echo "Install the extra's"
 else
-    echo "b"
+    echo -e "${red}[!]${cyan} > Not installing: extras${r}"
 fi
 
 # Install Zorin Setup
-askConfirm "${red}[?]${yellow} Would you like to install flatpak apps? (Y/n)${reset}"
+askConfirm "${red}[?]${yellow} Would you like to install zorin apps? (Y/n)${r}"
 if [ $? = 1 ]; then
-    echo "a"
+    echo "Lets install some apps"
 else
-    echo "b"
+    echo -e "${red}[!]${cyan} > Not installing: zorin apps${r}"
 fi
 
 installExtra() {
