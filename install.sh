@@ -35,6 +35,48 @@ askConfirm() {
     esac
 }
 
+installExtra() {
+    # Node
+    askConfirm "${red}[?]${yellow} Install: Node.JS? (Y/n)${r}"
+    if [ $? = 1 ]; then
+        echo "Lets install some apps"
+    else
+        echo -e "${red}[!]${cyan} > Skipped: Node.JS${r}"
+    fi
+    
+    # PHP
+    askConfirm "${red}[?]${yellow} Install: PHP? (Y/n)${r}"
+    if [ $? = 1 ]; then
+        
+        #sudo add-apt-repository ppa:ondrej/php -y
+        #sudo apt-get update -y
+        #sudo apt install -y php8.1 php8.1-curl php8.1-common php8.1-gd php8.1-xml php8.1-soap php8.1-mbstring php8.1-mysql php8.1-zip php8.1-gmp php8.1-redis php8.1-bcmath php8.1-imap
+        
+        echo "Lets install some apps"
+    else
+        echo -e "${red}[!]${cyan} > Skipped: PHP${r}"
+    fi
+    # # Node
+    # sudo npm i -g pm2
+}
+
+installApps() {
+    #flatpak install flathub com.jetbrains.PhpStorm
+    #flatpak install flathub io.github.shiftey.Desktop
+    #flatpak install flathub com.getpostman.Postman
+    #flatpak install flathub com.spotify.Client
+    #flatpak install flathub com.discordapp.Discord
+    
+    # Boxes
+    askConfirm "${red}[?]${yellow} Install: Boxes? (Y/n)${r}"
+    if [ $? = 1 ]; then
+        echo -e "${blue}[~]${grey} Installing: Boxes${r}"
+        flatpak install flathub org.gnome.Boxes -y
+    else
+        echo -e "${red}[!]${cyan} > Skipped: Boxes${r}"
+    fi
+}
+
 # Install core
 echo -e "${blue}[~]${yellow} Installing core requirements${r}"
 sudo apt-get install -yqq software-properties-common ca-certificates lsb-release apt-transport-https curl
@@ -47,6 +89,7 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.g
 
 # Install base packages
 echo -e "${blue}[~]${grey} Installing: neovim${r}"
+sudo add-apt-repository ppa:neovim-ppa/stable -y
 checkPackage "neovim"
 if [ $? = 1 ]; then
     echo -e "${green}[!]${cyan} > Already installed${r}"
@@ -68,11 +111,12 @@ fi
 echo -e "${blue}[~]${grey} Configurating utilities${r}"
 mkdir ~/.config/nvim -p
 cp ./linux_config/nvim/init.vim ~/.config/nvim/
+rm -r ./linux_config
 
 # Install Extra Setup
 askConfirm "${red}[?]${yellow} Would you like to install extras? (Y/n)${r}"
 if [ $? = 1 ]; then
-    echo "Install the extra's"
+    installExtra
 else
     echo -e "${red}[!]${cyan} > Not installing: extras${r}"
 fi
@@ -80,31 +124,9 @@ fi
 # Install Zorin Setup
 askConfirm "${red}[?]${yellow} Would you like to install zorin apps? (Y/n)${r}"
 if [ $? = 1 ]; then
-    echo "Lets install some apps"
+    installApps
 else
     echo -e "${red}[!]${cyan} > Not installing: zorin apps${r}"
 fi
 
-installExtra() {
-    # Dependencies
-    sudo add-apt-repository ppa:neovim-ppa/stable -y
-    sudo add-apt-repository ppa:ondrej/php -y
-    curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-    
-    sudo apt-get update -y
-    
-    # Node
-    sudo apt install -y nodejs
-    sudo npm i -g pm2
-    
-    # PHP8.1
-    sudo apt install -y php8.1 php8.1-curl php8.1-common php8.1-gd php8.1-xml php8.1-soap php8.1-mbstring php8.1-mysql php8.1-zip php8.1-gmp php8.1-redis php8.1-bcmath php8.1-imap
-}
-
-installZorin() {
-    #flatpak install flathub com.jetbrains.PhpStorm
-    #flatpak install flathub io.github.shiftey.Desktop
-    #flatpak install flathub com.getpostman.Postman
-    #flatpak install flathub com.spotify.Client
-    #flatpak install flathub com.discordapp.Discord
-}
+echo -e "${green}[!]${yellow} Finished${r}"
