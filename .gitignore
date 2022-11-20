@@ -1,0 +1,13 @@
+# Ignore everything
+/*
+
+# Folders
+!.config/nvim/
+
+# Files
+!.gitignore
+!.bash_aliases
+!.bashrc
+!.hushlogin
+!README.sh
+!install.sh
