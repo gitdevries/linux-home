@@ -10,6 +10,8 @@ readonly cyan="\033[1;36m"
 readonly grey="\033[0;37m"
 readonly r="\033[m"
 
+readonly PLUG_LOC="~/.local/share/nvim/site/autoload/plug.vim"
+
 checkPackage() {
     status="$(dpkg-query -W --showformat='${db:Status-Status}' "$1" 2>&1)"
     if [ ! $? = 0 ] || [ ! "$status" = installed ]; then
@@ -19,7 +21,9 @@ checkPackage() {
     return 1
 }
 
-checkFlatpak() {
+installFlatpak() {
+    local package=$1
+    local alias=${2:-$package}
     echo "${red}TODO: Implement${r}"
 }
 
@@ -34,6 +38,11 @@ askConfirm() {
         ;;
     esac
 }
+
+installDocker() {
+    sudo apt remove docker-desktop
+    sudo apt-get update -Y
+}   
 
 installExtra() {
     # Node
@@ -61,12 +70,7 @@ installExtra() {
 }
 
 installApps() {
-    #flatpak install flathub com.jetbrains.PhpStorm
-    #flatpak install flathub io.github.shiftey.Desktop
-    #flatpak install flathub com.getpostman.Postman
-    #flatpak install flathub com.spotify.Client
-    #flatpak install flathub com.discordapp.Discord
-    
+    sudo apt install -yqq gnome-tweaks 
     # Boxes
     askConfirm "${red}[?]${yellow} Install: Boxes? (Y/n)${r}"
     if [ $? = 1 ]; then
@@ -74,6 +78,42 @@ installApps() {
         flatpak install flathub org.gnome.Boxes -y
     else
         echo -e "${red}[!]${cyan} > Skipped: Boxes${r}"
+    fi
+
+    # Github Desktop
+    askConfirm "${red}[?]${yellow} Install: Github Desktop? (Y/n)${r}"
+    if [ $? = 1 ]; then
+        echo -e "${blue}[~]${grey} Installing: Github Desktop${r}"
+        flatpak install flathub io.github.shiftey.Desktop -y
+    else
+        echo -e "${red}[!]${cyan} > Skipped: Github Desktop${r}"
+    fi
+
+    # Postman
+    askConfirm "${red}[?]${yellow} Install: Postman? (Y/n)${r}"
+    if [ $? = 1 ]; then
+        echo -e "${blue}[~]${grey} Installing: Postman${r}"
+        flatpak install flathub com.getpostman.Postman -y
+    else
+        echo -e "${red}[!]${cyan} > Skipped: Postman${r}"
+    fi
+
+    # Spotify
+    askConfirm "${red}[?]${yellow} Install: Spotify? (Y/n)${r}"
+    if [ $? = 1 ]; then
+        echo -e "${blue}[~]${grey} Installing: Spotify${r}"
+        flatpak install flathub com.spotify.Client -y
+    else
+        echo -e "${red}[!]${cyan} > Skipped: Spotify${r}"
+    fi
+
+    # Discord
+    askConfirm "${red}[?]${yellow} Install: Discord? (Y/n)${r}"
+    if [ $? = 1 ]; then
+        echo -e "${blue}[~]${grey} Installing: Discord${r}"
+        flatpak install flathub com.discordapp.Discord -y
+    else
+        echo -e "${red}[!]${cyan} > Skipped: Discord${r}"
     fi
 }
 
@@ -85,15 +125,20 @@ echo -e "${green}[!]${purple} > Updated${r}"
 
 # Download external dependencies
 echo -e "${blue}[~]${grey} Installing: neovim plug${r}"
-curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+if [ -f $PLUG_LOC ]; then
+    echo -e "${green}[!]${cyan} > Already installed${r}"
+else 
+    curl -fLo $PLUG_LOC -s --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    echo -e "${green}[!]${purple} > Installed${r}"
+fi
 
 # Install base packages
 echo -e "${blue}[~]${grey} Installing: neovim${r}"
-sudo add-apt-repository ppa:neovim-ppa/stable -y
 checkPackage "neovim"
 if [ $? = 1 ]; then
     echo -e "${green}[!]${cyan} > Already installed${r}"
 else
+    sudo add-apt-repository ppa:neovim-ppa/stable -y
     sudo apt install -yqq neovim
     echo -e "${green}[!]${purple} > Installed${r}"
 fi
@@ -129,4 +174,4 @@ else
     echo -e "${red}[!]${cyan} > Not installing: zorin apps${r}"
 fi
 
-echo -e "${green}[!]${yellow} Finished${r}"
+echo -e "${green}[!]${green} We are done!${r}"
