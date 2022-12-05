@@ -2,7 +2,7 @@
 /*
 
 # Folders
-!linux_config
+!linux_home
 
 # Files
 !.gitignore
@@ -10,4 +10,4 @@
 !.bashrc
 !.hushlogin
 !README.sh
-!install.sh
+!home.sh
