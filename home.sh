@@ -54,8 +54,8 @@ prepareSystem() {
 
 # Cleanup leftovers from Linx Home
 cleanupHome() {
-  rm -rf ./linux_home
-  rm -rf ./.git
+  rm -rf ./home/$NORMAL_USER/linux_home
+  rm -rf ./home/$NORMAL_USER/.git
 }
 
 installPackages() {
@@ -63,8 +63,9 @@ installPackages() {
     sudo apt install -yqq neovim
     curl -fLo $PLUG_LOC -s --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-    mkdir ~/.config/nvim -p
-    cp ./linux_home/nvim/init.vim ~/.config/nvim/
+    mkdir /home/$NORMAL_USER/.config/nvim -p
+    sudo cp /home/$NORMAL_USER/linux_home/nvim/init.vim /home/$NORMAL_USER/.config/nvim/
+    sudo chown $NORMAL_USER:$NORMAL_USER /home/$NORMAL_USER/.config/ -R
 
     # Keychain
     sudo apt install -yqq keychain
@@ -77,12 +78,13 @@ installPackages() {
 
     # PHP
     sudo apt install -yqq php8.1 php8.1-curl php8.1-common php8.1-fpm php8.1-gd php8.1-xml php8.1-soap php8.1-mbstring php8.1-mysql php8.1-zip php8.1-gmp php8.1-redis php8.1-bcmath php8.1-imap
-    sudo cp ./linux_home/php/local.ini /etc/php/8.1/fpm/conf.d/local.ini
+    sudo cp /home/$NORMAL_USER/linux_home/php/local.ini /etc/php/8.1/fpm/conf.d/local.ini
     
     # Docker
     sudo addgroup --system docker
     sudo adduser $NORMAL_USER docker
     newgrp docker
+    sudo snap install docker
     sudo snap disable docker
     sudo snap enable docker
 }
