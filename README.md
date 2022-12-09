@@ -22,3 +22,10 @@ Is the alternative to Windows and macOS designed to make your computer faster, m
 
 ## Windows WSL
 https://djoowe.notion.site/Ubuntu-Home-fda09c17b55b45059fed00a233a67d52
+
+## SSL Local dev
+```
+openssl req -x509 -sha256 -nodes -newkey rsa:2048 -keyout localhost.key -out localhost.crt
+sudo cp localhost.crt /usr/local/share/ca-certificates/localhost.crt
+sudo update-ca-certificates
+```
